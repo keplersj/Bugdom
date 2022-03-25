@@ -236,6 +236,7 @@ void Render_SetDefaultModifiers(RenderModifiers* dest)
 
 void Render_InitState(const TQ3ColorRGBA* clearColor)
 {
+	printf("render starting\n");
 	// On Windows, proc addresses are only valid for the current context,
 	// so we must get proc addresses everytime we recreate the context.
 	Render_GetGLProcAddresses();
@@ -254,15 +255,19 @@ void Render_InitState(const TQ3ColorRGBA* clearColor)
 	SetInitialState(GL_BLEND,			false);
 	SetInitialState(GL_LIGHTING,		true);
 	SetInitialState(GL_FOG,				false);
+	printf("render initial states\n");
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	gState.blendFuncIsAdditive = false;		// must match glBlendFunc call above!
+	printf("render blend\n");
 	
 	glDepthMask(true);
 	gState.hasFlag_glDepthMask = true;		// must match glDepthMask call above!
+	printf("render depth\n");
 
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	gState.wantColorMask = true;			// must match glColorMask call above!
+	printf("render color\n");
 
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	
@@ -271,6 +276,7 @@ void Render_InitState(const TQ3ColorRGBA* clearColor)
 	gState.currentTransform = NULL;
 
 	glClearColor(clearColor->r, clearColor->g, clearColor->b, 1.0f);
+	printf("clear color\n");
 	
 	// Set misc GL defaults that apply throughout the entire game
 	glAlphaFunc(GL_GREATER, 0.4999f);
@@ -289,6 +295,7 @@ void Render_InitState(const TQ3ColorRGBA* clearColor)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	CHECK_GL_ERROR();
+	printf("render finished\n");
 }
 
 void Render_Shutdown(void)

@@ -19,3 +19,5 @@ src/Headers/version.h
 
 # macOS metadata
 .DS_Store
+
+lib/

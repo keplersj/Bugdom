@@ -123,11 +123,15 @@ QD3DSetupOutputType	*outputPtr;
 
 			/* ALLOC MEMORY FOR OUTPUT DATA */
 
+			printf("alloc memory\n");
+
 	*outputHandle = (QD3DSetupOutputType *)AllocPtr(sizeof(QD3DSetupOutputType));
 	outputPtr = *outputHandle;
 	GAME_ASSERT(outputPtr);
 
 				/* CREATE & SET DRAW CONTEXT */
+
+				printf("create and set draw context\n");
 
 	GAME_ASSERT_MESSAGE(!gGLContext, "stale GL context not destroyed before calling SetupWindow");
 
@@ -135,6 +139,8 @@ QD3DSetupOutputType	*outputPtr;
 	GAME_ASSERT(gGLContext);
 
 				/* PASS BACK INFO */
+
+				printf("pass back info\n");
 
 	outputPtr->paneClip 			= setupDefPtr->view.paneClip;
 	outputPtr->aspectRatio			= 1.0f;								// aspect ratio is set at every frame depending on window size
@@ -158,11 +164,16 @@ QD3DSetupOutputType	*outputPtr;
 
 				/* SET UP OPENGL RENDERER PROPERTIES NOW THAT WE HAVE A CONTEXT */
 
+				printf("set up renderer\n");
+
 	SDL_GL_SetSwapInterval(gCommandLine.vsync);
+	printf("swap set\n");
 
 	CreateLights(&setupDefPtr->lights);
+	printf("lights created\n");
 
 	Render_InitState(&setupDefPtr->view.clearColor);
+	printf("initial state rendered\n");
 
 	if (setupDefPtr->lights.useFog)
 	{
@@ -178,6 +189,8 @@ QD3DSetupOutputType	*outputPtr;
 
 
 				/* INIT TEXT SYSTEM SO WE CAN DRAW TEXT ANYWHERE IN THE GAME */
+
+				printf("init text system\n");
 
 	TextMesh_Init();
 }

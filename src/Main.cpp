@@ -13,6 +13,8 @@
 #include "game.h"
 #include "version.h"
 
+#include "gl4esinit.h"
+
 #if __APPLE__
 #include "killmacmouseacceleration.h"
 #include <libproc.h>
@@ -135,7 +137,7 @@ int CommonMain(int argc, const char** argv)
 		throw std::runtime_error("Couldn't initialize SDL video subsystem.");
 
 	// Create window
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 	if (gCommandLine.msaa != 0)
@@ -154,6 +156,8 @@ int CommonMain(int argc, const char** argv)
 	if (!gSDLWindow)
 		throw std::runtime_error("Couldn't create SDL window.");
 
+	printf("Come on. I know we get here!\n");
+
 	// Uncomment to dump the game's resources to a temporary directory.
 	//Pomme_StartDumpingResources("/tmp/BugdomRezDump");
 
@@ -170,9 +174,12 @@ int CommonMain(int argc, const char** argv)
 		}
 	}
 
+	printf("I am also here!\n");
+
 	// Start the game
 	try
 	{
+		printf("I am here!\n");
 		GameMain();
 	}
 	catch (Pomme::QuitRequest&)
@@ -192,6 +199,10 @@ int main(int argc, char** argv)
 	std::string		finalErrorMessage		= "";
 	bool			showFinalErrorMessage	= false;
 
+	#if __EMSCRIPTEN__
+	initialize_gl4es();
+	#endif
+
 #if _DEBUG
 	// In debug builds, if CommonMain throws, don't catch.
 	// This way, it's easier to get a clean stack trace.
@@ -201,6 +212,7 @@ int main(int argc, char** argv)
 	// so we can show an error dialog to the user.
 	try
 	{
+		printf("Hi there!\n");
 		returnCode = CommonMain(argc, const_cast<const char**>(argv));
 	}
 	catch (std::exception& ex)		// Last-resort catch

@@ -12,6 +12,9 @@
 #include "game.h"
 #include <string.h>
 
+#ifdef __EMSCRIPTEN__
+#include "emscripten.h"
+#endif
 
 /****************************/
 /*    PROTOTYPES            */
@@ -780,8 +783,19 @@ static void CheckDebugShortcutKeysOnBoot(void)
 /************************************************************/
 
 
+void MainLoop() {
+	DoTitleScreen();
+	if (DoMainMenu())
+		return;
+		
+	PlayGame();
+}
+
 int GameMain(void)
 {
+
+printf("Hello!\n");
+
 unsigned long	someLong;
 
 				/**************/
@@ -792,6 +806,7 @@ unsigned long	someLong;
 
 	ToolBoxInit();
  	
+	 printf("We've booted!\n");
 
 
 			/* INIT SOME OF MY STUFF */
@@ -803,6 +818,8 @@ unsigned long	someLong;
 	Init3DMFManager();	
 	InitFenceManager();
 
+	printf("We inited a few things!\n");
+
 
 			/* INIT MORE MY STUFF */
 					
@@ -812,6 +829,8 @@ unsigned long	someLong;
 	GetDateTime ((unsigned long *)(&someLong));		// init random seed
 	SetMyRandomSeed(someLong);
 
+	printf("We inited more things!\n");
+
 
 			/* DO INTRO */
 
@@ -820,17 +839,21 @@ unsigned long	someLong;
 	DoPangeaLogo();
 	CheckDebugShortcutKeysOnBoot();
 
+	printf("We did the intro!\n");
+
 
 		/* MAIN LOOP */
 			
+	#if __EMSCRIPTEN__
+	emscripten_set_main_loop(MainLoop, 0, 1);
+	#else
 	while(true)
 	{
-		DoTitleScreen();
-		if (DoMainMenu())
-			continue;
-		
-		PlayGame();
+		MainLoop();	
 	}
+	#endif
+
+	printf("We did the main loop!\n");
 	
 	
 	return(0);

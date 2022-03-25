@@ -36,11 +36,15 @@ void InitWindowStuff(void)
 
 	SetFullscreenMode();
 
+	printf("We set full screen mode!\n");
+
 		/* SHOW A COUPLE BLACK FRAMES BEFORE WE BEGIN */
 
 	QD3DSetupInputType viewDef;
 	QD3D_NewViewDef(&viewDef);
+	printf("New View Def\n");
 	QD3D_SetupWindow(&viewDef, &gGameViewInfoPtr);
+	printf("Setup Window\n");
 	for (int i = 0; i < 45; i++)
 	{
 		QD3D_DrawScene(gGameViewInfoPtr, nil);
@@ -48,6 +52,8 @@ void InitWindowStuff(void)
 	}
 	QD3D_DisposeWindowSetup(&gGameViewInfoPtr);
 	Pomme_FlushPtrTracking(true);
+
+	printf("We've shown a couple black frames before we begin!\n");
 }
 
 

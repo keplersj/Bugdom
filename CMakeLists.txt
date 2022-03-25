@@ -35,14 +35,19 @@ set(POMME_NO_VIDEO true)
 set(POMME_NO_INPUT true)
 set(POMME_NO_GRAPHICS true)
 
+set(NOX11 true)
+# set(NOEGL true)
+set(STATICLIB true)
+
 #------------------------------------------------------------------------------
 # DEPENDENCIES
 #------------------------------------------------------------------------------
 
 add_subdirectory(extern/Pomme)
+add_subdirectory(extern/gl4es)
 
 find_package(SDL2 REQUIRED COMPONENTS main)
-find_package(OpenGL REQUIRED)
+# find_package(OpenGL REQUIRED)
 
 #------------------------------------------------------------------------------
 # GAME SOURCES
@@ -74,8 +79,9 @@ source_group(TREE ${GAME_SRCDIR} PREFIX "" FILES ${GAME_ALL_SOURCES})
 
 set(GAME_LIBRARIES
 	Pomme
+	GL
 	${SDL2_LIBRARIES}
-	${OPENGL_LIBRARIES}
+	# ${OPENGL_LIBRARIES}
 )
 
 if(WIN32)
@@ -102,12 +108,19 @@ endif()
 
 target_include_directories(${GAME_TARGET} PRIVATE
 	${SDL2_INCLUDE_DIRS}
-	${OPENGL_INCLUDE_DIR}
+	# ${OPENGL_INCLUDE_DIR}
+	extern/gl4es/include
+	extern/gl4es/include/GL
+	extern/gl4es/src
 	extern/Pomme/src
 	extern/Pomme/src/QD3D
 	${GAME_SRCDIR}
 	${GAME_SRCDIR}/Headers
 )
+
+if( ${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+	list(REMOVE_ITEM GAME_LIBRARIES "nul")
+endif()
 
 target_link_libraries(${GAME_TARGET} ${GAME_LIBRARIES})
 
@@ -133,6 +146,11 @@ endif()
 #------------------------------------------------------------------------------
 # COMPILER OPTIONS
 #------------------------------------------------------------------------------
+
+if( ${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -sFULL_ES2 -s NO_DISABLE_EXCEPTION_CATCHING --preload-file ${CMAKE_SOURCE_DIR}/Data@Data/")
+	set(CMAKE_EXECUTABLE_SUFFIX .html)
+endif()
 
 if(NOT MSVC)
 	target_compile_options(${GAME_TARGET} PRIVATE
